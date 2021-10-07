@@ -1,0 +1,17 @@
+{
+  "name": "roxfishbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "fish": "node index.js",
+    "target": "node target.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "robotjs": "^0.6.0",
+    "sharp": "^0.29.1"
+  }
+}
