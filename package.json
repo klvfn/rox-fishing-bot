@@ -4,13 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "fish": "node index.js",
-    "target": "node target.js"
+    "fish": "node index.js --action=fish",
+    "target": "node index.js --action=target"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^10.0.0",
     "robotjs": "^0.6.0",
     "sharp": "^0.29.1"
   }

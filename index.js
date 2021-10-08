@@ -1,17 +1,29 @@
+require("dotenv").config();
 const bot = require("robotjs");
-const { fishingPos, runCount, targetHex, compareTime } = require("./variables");
-const { screenCapture, sleep } = require("./utils");
+
+// Variables
+const fishingPos = process.env.FISHING_POS.split(",").map((fp) => parseInt(fp));
+const runCount = parseInt(process.env.RUN_COUNT);
+const targetHex = process.env.TARGET_HEX.split(",");
+const compareTime = parseInt(process.env.COMPARE_TIME);
 
 let totalFound = 0;
 
-const findGreenPixelUsingCapture = (x, y) => {
-  const fishingBtnBitmap = screenCapture(x, y, false);
-  const currentHex = fishingBtnBitmap.colorAt(2, 2);
-  const isFound = targetHex.includes(currentHex);
-  if (isFound) {
-    console.log("Found: ", currentHex);
+const findTargetHex = (x, y) => {
+  sleep(2000);
+  const targetHex = [];
+  for (let i = 0; i < 5; i++) {
+    const increment = 2 * i;
+    const currX = x + increment;
+    const currY = y + increment;
+    const color = bot.getPixelColor(currX, currY);
+    targetHex.push(color);
   }
-  return isFound;
+  console.log(targetHex.join(","));
+};
+
+const sleep = (ms) => {
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
 };
 
 const findGreenPixel = (x, y) => {
@@ -51,16 +63,30 @@ const main = () => {
         }
       }
     }
-    sleep(2000);
+    sleep(3000);
     count++;
   }
 };
 
 // Init function
 (() => {
-  console.log("Rox fishing bot running...");
+  const action = process.argv[2].split("=")[1];
+  console.log(`Rox fishing bot running, action: ${action}`);
   // Make sure you already run `npm run target` first and copy the target hex to variables.js
-  main();
-  console.log(`Total Found: ${totalFound}`);
-  console.log(`Accuracy: ${Math.round((totalFound / runCount) * 100)}%`);
+  switch (action) {
+    case "fish":
+      main();
+      console.log(`Total Found: ${totalFound}`);
+      console.log(`Accuracy: ${Math.round((totalFound / runCount) * 100)}%`);
+      break;
+    case "target":
+      // 1. Screenshot image when found fish (fishing rod with green around the circle image), currently only work on 1920x1080
+      // 2. Find target hex by running findTargetHex func and pass the x,y position
+      findTargetHex(fishingPos[0], fishingPos[1]);
+      console.log("Set target hex to env");
+      break;
+    default:
+      console.log("Invalid action");
+      break;
+  }
 })();
