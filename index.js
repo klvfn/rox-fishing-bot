@@ -27,7 +27,7 @@ const sleep = (ms) => {
 };
 
 const findGreenPixel = (x, y) => {
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 5; i++) {
     const increment = 2 * i;
     const currX = x + increment;
     const currY = y + increment;
